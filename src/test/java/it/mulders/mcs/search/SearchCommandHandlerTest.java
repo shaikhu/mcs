@@ -102,7 +102,7 @@ class SearchCommandHandlerTest implements WithAssertions {
                     .thenReturn(new Result.Success<>(new SearchResponse(singleArtifactResponse)));
 
             // Act
-            handler.search(SearchQuery.search("plexus-utils").build(), "maven", false);
+            handler.search(SearchQuery.search("plexus-utils").build(), "maven", false, false);
 
             // Assert
             verify(outputPrinter).print(any(WildcardSearchQuery.class), eq(singleArtifactResponse), any());
@@ -117,7 +117,7 @@ class SearchCommandHandlerTest implements WithAssertions {
             when(searchClient.search(any())).thenReturn(result);
 
             assertThatThrownBy(
-                            () -> handler.search(SearchQuery.search("tls-error").build(), "maven", false))
+                            () -> handler.search(SearchQuery.search("tls-error").build(), "maven", false, false))
                     .isInstanceOf(RuntimeException.class);
         }
     }
@@ -134,7 +134,7 @@ class SearchCommandHandlerTest implements WithAssertions {
             var query = SearchQuery.search("org.codehaus.plexus:plexus-utils").build();
 
             // Act
-            handler.search(query, "maven", false);
+            handler.search(query, "maven", false, false);
 
             // Assert
             verify(outputPrinter).print(eq(query), eq(singleArtifactResponse), any());
@@ -149,7 +149,7 @@ class SearchCommandHandlerTest implements WithAssertions {
 
             // Act
             handler.search(
-                    SearchQuery.search("org.codehaus.plexus:plexus-utils").build(), "maven", false);
+                    SearchQuery.search("org.codehaus.plexus:plexus-utils").build(), "maven", false, false);
 
             // Assert
             verify(outputPrinter).print(any(CoordinateQuery.class), eq(singleArtifactResponse), any());
@@ -161,6 +161,7 @@ class SearchCommandHandlerTest implements WithAssertions {
                             SearchQuery.search("org.codehaus.plexus:tls-error:3.4.1")
                                     .build(),
                             "maven",
+                            false,
                             false))
                     .isInstanceOf(RuntimeException.class);
         }

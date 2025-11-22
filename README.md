@@ -56,6 +56,10 @@ This tool supports the following modes of searching:
   See [their documentation](https://ossindex.sonatype.org) for details on how this may impact your usage.
   You can specify your credentials using the system properties `ossindex.username` and `ossindex.password`.
   See under "Configuring MCS" on how to do this in the most convenient way.
+* When a search returns exactly one result, you can pass along the `-c` (or `--copy`) flag to copy the dependency snippet to your clipboard.
+  This feature works on macOS (using `pbcopy`), Windows (using `clip`), and Linux (using `xclip`, `xsel`, or `wl-copy` for Wayland).
+  You can enable this by default using the system property `clipboard.copy=true` (the `-c`/`--copy` and `--no-copy` flags override this setting).
+  See under "Configuring MCS" on how to do this in the most convenient way.
 
 ## Installation
 
@@ -108,6 +112,7 @@ Inside that folder, create a file **mcs.config** and write the following line in
 javax.net.ssl.trustStore=/path/to/keystore
 ossindex.username=xxx
 ossindex.password=yyy
+clipboard.copy=true
 ```
 
 This way, you don't have to remember passing the `-D`.

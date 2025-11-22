@@ -29,7 +29,11 @@ public class SearchCommandHandler {
         this.searchClient = searchClient;
     }
 
-    public void search(final SearchQuery query, final String outputFormat, final boolean reportVulnerabilities) {
+    public void search(
+            final SearchQuery query,
+            final String outputFormat,
+            final boolean reportVulnerabilities,
+            final Boolean copyToClipboard) {
         performSearch(query)
                 .map(response -> performAdditionalSearch(query, response))
                 .ifPresentOrElse(
@@ -37,7 +41,7 @@ public class SearchCommandHandler {
                             if (reportVulnerabilities) {
                                 processResponse(query, response);
                             }
-                            printResponse(query, response, outputFormat, reportVulnerabilities);
+                            printResponse(query, response, outputFormat, reportVulnerabilities, copyToClipboard);
                         },
                         failure -> {
                             throw new McsRuntimeException(failure);
@@ -98,8 +102,10 @@ public class SearchCommandHandler {
             final SearchQuery query,
             final SearchResponse.Response response,
             final String outputFormat,
-            final boolean showVulnerabilities) {
-        var printer = new DelegatingOutputPrinter(outputFactory.findOutputPrinter(outputFormat), showVulnerabilities);
+            final boolean showVulnerabilities,
+            final Boolean copyToClipboard) {
+        var printer = new DelegatingOutputPrinter(
+                outputFactory.findOutputPrinter(outputFormat), showVulnerabilities, copyToClipboard);
         printer.print(query, response, System.out);
     }
 }

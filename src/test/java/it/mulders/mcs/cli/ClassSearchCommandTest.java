@@ -48,7 +48,7 @@ class ClassSearchCommandTest implements WithAssertions {
 
     private void verifyHandlerInvocation(String outputFormat, boolean reportVulnerabilities, SearchQuery query) {
         var captor = ArgumentCaptor.forClass(SearchQuery.class);
-        verify(searchCommandHandler).search(captor.capture(), eq(outputFormat), eq(reportVulnerabilities));
+        verify(searchCommandHandler).search(captor.capture(), eq(outputFormat), eq(reportVulnerabilities), eq(false));
         assertThat(captor.getValue()).isEqualTo(query);
     }
 }
