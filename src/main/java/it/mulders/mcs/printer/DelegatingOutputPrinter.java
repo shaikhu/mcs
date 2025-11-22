@@ -12,8 +12,11 @@ public class DelegatingOutputPrinter implements OutputPrinter {
     private final OutputPrinter coordinateOutput;
     private final OutputPrinter tabularSearchOutput;
 
-    public DelegatingOutputPrinter(final OutputPrinter coordinateOutput, final boolean showVulnerabilities) {
-        this(new NoOutputPrinter(), coordinateOutput, new TabularOutputPrinter(showVulnerabilities));
+    public DelegatingOutputPrinter(
+            final OutputPrinter coordinateOutput, final boolean showVulnerabilities, final boolean copyToClipboard) {
+        this.noOutput = new NoOutputPrinter();
+        this.tabularSearchOutput = new TabularOutputPrinter(showVulnerabilities);
+        this.coordinateOutput = wrapWithClipboardIfEnabled(copyToClipboard, coordinateOutput);
     }
 
     // Visible for testing
@@ -33,5 +36,14 @@ public class DelegatingOutputPrinter implements OutputPrinter {
             case 1 -> coordinateOutput.print(query, response, stream);
             default -> tabularSearchOutput.print(query, response, stream);
         }
+    }
+
+    private static OutputPrinter wrapWithClipboardIfEnabled(
+            final boolean copyToClipboard, final OutputPrinter coordinateOutput) {
+        var isClipboardEnabled = copyToClipboard || "true".equals(System.getProperty("clipboard.copy", "false"));
+        if (isClipboardEnabled && coordinateOutput instanceof CoordinatePrinter printer) {
+            return new ClipboardCoordinatePrinter(printer);
+        }
+        return coordinateOutput;
     }
 }

@@ -56,6 +56,33 @@ This tool supports the following modes of searching:
   You can specify your credentials using the system properties `ossindex.username` and `ossindex.password`.
   See under "Configuring MCS" on how to do this in the most convenient way.
 
+## Clipboard Copy
+
+When a search returns exactly one result, MCS can automatically copy the dependency snippet to your clipboard.
+
+### Enabling Clipboard Copy
+
+Add the following line to `~/.mcs/mcs.config`:
+
+```
+clipboard.copy=true
+```
+
+You can also use the `-c` (or `--copy`) flag for one-time clipboard copying, overriding the configuration.
+
+```bash
+mcs search --copy org.junit.jupiter:junit-jupiter-api:5.14.1
+```
+
+### Platform Support
+
+The clipboard feature works on:
+* **macOS** - Uses `pbcopy`
+* **Windows** - Uses `clip`
+* **Linux** - Supports `xclip`, `xsel`, or `wl-copy` (for Wayland)
+
+If the required clipboard utility is not available on your system, MCS will display a message indicating clipboard functionality is unavailable.
+
 ## Installation
 
 You can install mcs using the package manager of your choice:
@@ -107,6 +134,7 @@ Inside that folder, create a file **mcs.config** and write the following line in
 javax.net.ssl.trustStore=/path/to/keystore
 ossindex.username=xxx
 ossindex.password=yyy
+clipboard.copy=true
 ```
 
 This way, you don't have to remember passing the `-D`.
