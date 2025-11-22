@@ -53,7 +53,7 @@ public class ClassSearchCommand implements Callable<Integer> {
                 .isFullyQualified(this.fullName)
                 .withLimit(limit)
                 .build();
-        searchCommandHandler.search(searchQuery, "maven", false);
+        searchCommandHandler.search(searchQuery, "maven", false, false);
         return 0;
     }
 }
